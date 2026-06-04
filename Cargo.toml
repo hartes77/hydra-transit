@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.74"
 description = "Tunnel di transito dati cifrato point-to-point ultra-veloce su socket TCP raw, con key-ratchet deterministico (Morphing Key) e cifratura in-place zero-copy."
-license = "AGPL-3.0-or-later"
+license = "BUSL-1.1"
 readme = "README.md"
 
 [[bin]]

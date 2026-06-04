@@ -48,7 +48,7 @@ RUN set -eu; \
 # ---------- Stage 2: runtime ----------
 FROM alpine:${ALPINE_VERSION} AS runtime
 LABEL org.opencontainers.image.title="hydra-transit" \
-      org.opencontainers.image.licenses="AGPL-3.0-or-later"
+      org.opencontainers.image.licenses="BUSL-1.1"
 
 # Utente non privilegiato.
 RUN addgroup -S hydra && adduser -S -G hydra hydra

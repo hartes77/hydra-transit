@@ -210,55 +210,28 @@ just docker-build # immagine portabile
 
 ## Licensing & Enterprise Support
 
-`hydra-transit` è distribuito con un modello **dual-licensing**.
+Questo progetto è rilasciato sotto **Business Source License 1.1 (BSL)**.
+L'uso del software è gratuito ed esclusivamente consentito per scopi di sviluppo
+locale, test, ricerca e didattica.
 
-### Licenza open-source — AGPL-3.0-or-later
+> ⚠️ **ATTENZIONE:** Qualsiasi utilizzo in ambienti di produzione (inclusi ma non
+> limitati a: reti aziendali interne, servizi rivolti al pubblico, integrazione in
+> prodotti commerciali) richiede l'acquisizione esplicita di una **Licenza
+> Commerciale**.
 
-Il software è open-source sotto **GNU Affero General Public License v3**
-([LICENSE](LICENSE)). L'AGPLv3 è una licenza **copyleft forte con clausola di
-rete (§13)**: se usi o modifichi `hydra-transit` e lo rendi accessibile agli
-utenti **attraverso una rete** (es. come servizio, tunnel o componente di
-backend), sei **obbligato a rendere disponibile l'intero codice sorgente
-corrispondente** dell'infrastruttura collegata, sotto la stessa licenza
-AGPLv3 — incluse le tue modifiche e il codice che vi si integra in modo
-derivato.
+### Parametri della licenza ([LICENSE](LICENSE))
 
-In sintesi, con l'AGPLv3 **devi**:
+| Parametro | Valore |
+| --- | --- |
+| **Licensed Work** | hydra-transit |
+| **Licensor** | Jean Piroddi |
+| **Change Date** | 2029-06-04 |
+| **Change License** | Apache License 2.0 |
 
-- pubblicare il codice sorgente completo di ogni versione modificata che metti
-  in esercizio o offri via rete;
-- mantenere la licenza AGPLv3 sull'opera derivata;
-- preservare gli avvisi di copyright e licenza.
+Alla **Change Date** (4 giugno 2029) la versione corrispondente del software si
+converte automaticamente ad **Apache License 2.0**. Fino ad allora valgono i
+termini BSL 1.1: libero per sviluppo/test/ricerca, **a pagamento per la
+produzione**.
 
-### Licenza commerciale (Enterprise)
-
-Se **non puoi o non vuoi** soddisfare gli obblighi dell'AGPLv3 — in
-particolare se intendi:
-
-- integrare `hydra-transit` in un **prodotto proprietario / closed-source**;
-- offrirlo come parte di un **servizio o SaaS** senza pubblicare il sorgente
-  dell'infrastruttura collegata;
-- ridistribuirlo all'interno di software commerciale;
-- ottenere supporto enterprise, SLA o indennizzo;
-
-allora è **obbligatorio acquisire una Licenza Commerciale separata**, che ti
-esonera dagli obblighi copyleft dell'AGPLv3.
-
-> **L'uso commerciale, enterprise o all'interno di software proprietario senza
-> una Licenza Commerciale valida non è consentito dall'AGPLv3** e costituisce
-> violazione di licenza.
-
-### Contatti
-
-Per richieste di Licenza Commerciale, valutazioni enterprise o supporto:
-
-📧 **licensing@hydra-transit.example** *(placeholder — sostituire con l'indirizzo reale)*
-
-Indica nella richiesta: organizzazione, caso d'uso, volume/numero di nodi e
-contesto di deployment (on-premise / cloud / prodotto).
-
----
-
-## Licenza
-
-[AGPL-3.0-or-later](LICENSE) — vedi la sezione **Licensing & Enterprise Support** sopra.
+Per informazioni e licenze enterprise, contattare:
+📧 **[Inserisci la tua email qui]** *(placeholder — sostituire con l'indirizzo reale)*
