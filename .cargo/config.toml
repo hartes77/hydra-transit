@@ -1,0 +1,9 @@
+# Ottimizzazioni per la CPU host: abilita tutte le estensioni vettoriali
+# (AVX2/AVX-512 su x86_64, NEON su aarch64) disponibili sulla macchina di build.
+# I crate chacha20poly1305 e blake3 selezionano comunque il backend SIMD a
+# runtime, ma questo flag permette anche l'inlining/auto-vettorizzazione del
+# resto del codice per l'hardware locale.
+#
+# NB: il binario risultante NON e' portabile su CPU piu' vecchie della host.
+[build]
+rustflags = ["-C", "target-cpu=native"]

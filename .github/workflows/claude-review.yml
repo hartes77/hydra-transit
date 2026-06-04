@@ -1,0 +1,61 @@
+name: Claude PR Review
+
+# Review automatica dei pull request tramite anthropics/claude-code-action.
+# OPZIONALE: si attiva solo se il secret ANTHROPIC_API_KEY e' configurato nel
+# repository (Settings -> Secrets and variables -> Actions). Senza il secret il
+# workflow gira ma non esegue alcuna review (nessun fallimento).
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: claude-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: claude-review
+    runs-on: ubuntu-latest
+    steps:
+      # Guard: verifica la presenza del secret senza esporlo (i secret non sono
+      # referenziabili direttamente nelle condizioni `if` a livello di job).
+      - name: Verifica secret
+        id: guard
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "$ANTHROPIC_API_KEY" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::ANTHROPIC_API_KEY non configurato — review Claude saltata."
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Claude Code Review
+        if: steps.guard.outputs.enabled == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Esegui una code review del diff di questo pull request per hydra-transit
+            (tunnel TCP cifrato in Rust). Concentrati su:
+              - correttezza crittografica e invarianti di sicurezza (fail-closed,
+                nessun nonce sul filo, header autenticato come AAD, no nonce-reuse);
+              - assenza di allocazioni nei loop `pump_*` (zero-malloc nel transito);
+              - gestione errori (niente unwrap/panic su input di rete);
+              - regressioni rispetto ai test `wire_*` e crypto.
+            Pubblica i rilievi come commenti inline sul PR. Sii conciso e prioritizza
+            i problemi ad alta confidenza.

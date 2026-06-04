@@ -1,0 +1,68 @@
+# Demo on-premise di hydra-transit.
+#
+# Due servizi ISOLATI su una rete bridge interna:
+#   - receiver: accetta la connessione, decifra e scarta su /dev/null
+#   - sender:   genera PAYLOAD_MB di dati e li spinge nel tunnel
+#
+# Entrambi i nodi condividono la STESSA HYDRA_KEY (requisito del protocollo).
+# A fine trasferimento ogni servizio stampa il report di throughput su stderr
+# (visibile in `docker compose up`).
+#
+# Uso:
+#   cp .env.example .env        # poi: HYDRA_KEY=$(openssl rand -hex 32)
+#   docker compose up --build
+#
+# La rete e' `internal: true`: i container parlano solo tra loro, nessuna
+# esposizione verso l'esterno (isolamento massimo per la demo).
+
+name: hydra-transit-demo
+
+# Ancora condivisa: stessa immagine/build per entrambi i servizi.
+x-hydra-build: &hydra-build
+  build:
+    context: .
+    args:
+      TARGET_CPU: ${TARGET_CPU:-}
+  image: hydra-transit:latest
+
+# Hardening comune.
+x-hardening: &hardening
+  read_only: true
+  cap_drop: ["ALL"]
+  security_opt: ["no-new-privileges:true"]
+  restart: "no"
+
+services:
+  receiver:
+    <<: [*hydra-build, *hardening]
+    container_name: hydra-receiver
+    hostname: receiver
+    environment:
+      HYDRA_KEY: "${HYDRA_KEY:?imposta HYDRA_KEY nel file .env — vedi .env.example, genera con openssl rand -hex 32}"
+    # Decifra verso /dev/null; il report di throughput esce su stderr (log).
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - 'echo "[receiver] in ascolto su :8080"; exec hydra-transit --mode receiver --port 8080 >/dev/null'
+    networks: [hydra-net]
+
+  sender:
+    <<: [*hydra-build, *hardening]
+    container_name: hydra-sender
+    depends_on: [receiver]
+    environment:
+      HYDRA_KEY: "${HYDRA_KEY:?imposta HYDRA_KEY nel file .env — vedi .env.example, genera con openssl rand -hex 32}"
+      PAYLOAD_MB: ${PAYLOAD_MB:-2048}
+    entrypoint: ["/bin/sh", "-c"]
+    # $$ => passa un singolo $ al shell del container (espansione a runtime).
+    command:
+      - |
+        echo "[sender] attendo il receiver..."; sleep 3
+        echo "[sender] invio $${PAYLOAD_MB} MiB attraverso il tunnel cifrato"
+        dd if=/dev/zero bs=1M count="$${PAYLOAD_MB}" 2>/dev/null \
+          | hydra-transit --mode sender --target receiver:8080
+    networks: [hydra-net]
+
+networks:
+  hydra-net:
+    driver: bridge
+    internal: true

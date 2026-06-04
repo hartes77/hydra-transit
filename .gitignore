@@ -1,0 +1,12 @@
+# Artefatti di build Rust
+/target
+
+# Configurazione locale con la chiave reale (NON committare)
+.env
+
+# Note personali Claude Code
+CLAUDE.local.md
+
+# File temporanei
+*.lat
+*.tmp

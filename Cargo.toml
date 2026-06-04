@@ -1,0 +1,32 @@
+[package]
+name = "hydra-transit"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+description = "Tunnel di transito dati cifrato point-to-point ultra-veloce su socket TCP raw, con key-ratchet deterministico (Morphing Key) e cifratura in-place zero-copy."
+license = "AGPL-3.0-or-later"
+readme = "README.md"
+
+[[bin]]
+name = "hydra-transit"
+path = "src/main.rs"
+
+[dependencies]
+# AEAD: ChaCha20-Poly1305 con backend SIMD auto-selezionato a runtime.
+chacha20poly1305 = "0.10"
+# KDF/ratchet: BLAKE3 con SIMD (SSE2/SSE4.1/AVX2/AVX512/NEON) auto-rilevate.
+blake3 = "1"
+# I/O asincrono.
+tokio = { version = "1", features = ["full"] }
+# CLI.
+clap = { version = "4", features = ["derive", "env"] }
+# Parsing chiave esadecimale.
+hex = "0.4"
+
+# Profilo di release ottimizzato per la CPU host.
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
